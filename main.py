@@ -1,5 +1,9 @@
-#!/usr/bin/python3
+from fastapi import FastAPI
+import os, logging, datetime
 
+app = FastAPI()
 
-if __name__ == "__main__":
+# Main entrypoint for api. 
+@app.get("/")
+def index():
     pass
