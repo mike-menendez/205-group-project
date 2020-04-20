@@ -6,13 +6,9 @@ app = FastAPI()
 # Main entrypoint for api. 
 @app.get("/")
 def index():
-    pass
+    return {"it": "works"}
 
-# Test route for clarity.
-# http://localhost:8000/test/1?q=foo
-@app.get("/test/{test_id}")
-def test(test_id: int, q: str = None):
-    # uncomment these lines to see them on the terminal
-    # print(f"q:<{q}>")
-    # print(f"test_id:<{test_id}>")
-    return {"test_id": test_id, "q": q}
+# Get data by country code
+@app.get("/country/{c_code}")
+def test(c_code: str = None):
+    return {"country": c_code}
