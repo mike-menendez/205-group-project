@@ -1,5 +1,8 @@
-from aiohttp import web
-import uvloop, asyncio, os, logging, datetime
+from fastapi import FastAPI, Response, status, Form
+from pydantic import BaseModel
+import os, datetime
+
+app = FastAPI()
 
 # Define a list of the available images to select the appropriate runtime
 # Key: language tag -> tuple(image name, compile + execute command)
@@ -11,35 +14,9 @@ IMG_LIST = {
     "js": ("node", "for i in $(cat input); do node app.js <$i 1>> out.txt 2> err.txt; done")
 }
 
-# Initalizes the logger, aiohttp server, declare routes, uvloop, runs server
-def main():
-    logging.basicConfig(filename="err.log", level=(os.getenv("LOG_LEVEL") or "ERROR"))
-    try:
-        asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-    except BaseException:
-        logging.error("Failed to set uvloop binding, using default")
-    app = web.Application()
-    app.add_routes([web.post("/", rts), web.get("/health", health_check), web.post("/eterm", early_term)])
-    web.run_app(app, port=80)
-
-def health_check(request):
-    return web.Response(status=200)
-
-async def early_term(request):
-    try:
-        data = await request.post()
-        params, required = {}, ["uuid", "lang"]
-        for k in required:
-            if data.get(k) is None:
-                raise KeyError(f"Could not find {k} in POST data")
-            else:
-                params[k] = data.get(k)
-    except BaseException as e:
-        logging.error(["Invalid request format", e])
-        return web.Response(status=400)
-    os.system("docker kill " + params["uuid"] + params["lang"] + "; docker rm --force " + params["uuid"] + params["lang"] + " > /dev/null 1>&2")
-    await clean_up(params)
-    return web.Response(status=200)
+@app.get("/health", status_code=200)
+async def health_check(request):
+    return
 
 async def parse_res(params):
     if os.stat(params["uuid"] + "err.out").st_size != 0:
@@ -100,26 +77,13 @@ async def runtime_service(params):
             params["uuid"] + params["lang"] + ":./" + params["uuid"] + "err.out .")
     # stop and delete container
     cmd.append("docker stop " + params["uuid"] + params["lang"] + " && docker rm " + params["uuid"] + params["lang"])
-
     for x in cmd: os.system(x + " > /dev/null 1>&2")
-    result = await parse_res(params)
-    return result
+    return await parse_res(params)
 
 # Driver code for the rts endpoint
-async def rts(request):
-    try:
-        data = await request.post()
-        params, required = {}, ["uuid", "code", "input", "question_id", "lang"]
-        for k in required:
-            if data.get(k) is None:
-                raise KeyError(f"Could not find {k} in POST data")
-            else:
-                params[k] = data.get(k)
-    except BaseException as e:
-        logging.error(msg="Invalid request format")
-        logging.error(e)
-        return web.Response(status=400)
-    return web.json_response(status=200, data= await runtime_service(params))
-
-if __name__ == "__main__":
-    main()
+@app.post("/", status_code=200)
+async def rts(*, uuid: str = Form(...), input: str = Form(...), code: str = Form(...),
+            question_id: str = Form(...), lang: str = Form(...), response: Response):
+    results = await runtime_service({ "uuid" : uuid, "input" : input, "code" : code, "question_id" : question_id, "lang" : lang })
+    if "c_err" in results.keys(): response.status_code = 400
+    return results
