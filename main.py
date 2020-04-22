@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Response, status, Form
-from pydantic import BaseModel
 import os, datetime
 
 app = FastAPI()
@@ -15,14 +14,19 @@ IMG_LIST = {
 }
 
 @app.get("/health", status_code=200)
-async def health_check(request):
+async def health_check():
     return
+
+@app.post("/eterm", status_code=200)
+async def eterm(uuid: str = Form(...), lang: str = Form(...)):
+    os.system(f"docker stop {uuid}{lang}")
+    os.system(f"docker rm -f {uuid}{lang}")
+    await clean_up({"uuid" : uuid})
+    return "we gucci"
 
 async def parse_res(params):
     if os.stat(params["uuid"] + "err.out").st_size != 0:
-        os.remove(params["uuid"])
-        os.remove("input" + params["uuid"])
-        os.remove(params["uuid"] + "err.out")
+        for x in [params['uuid'], f"input{params['uuid']}", f"{params['uuid']}err.out"]: os.remove(x)
         return {"c_err": ["compilation error"]}
     f, ans, s = open(params["uuid"] + ".out", "r"), [], ""
     line = f.readline()
@@ -38,35 +42,31 @@ async def parse_res(params):
 
 # Delete created files from user
 async def clean_up(params):
-    os.remove(params["uuid"])
-    os.remove("input" + params["uuid"])
-    os.remove(params["uuid"] + ".out")
-    os.remove(params["uuid"] + "err.out")
+    listy = [params["uuid"], f"input{params['uuid']}", f"{params['uuid']}.out", f"{params['uuid']}err.out"]
+    for x in listy: os.remove(x)
     return
 
-# Auxilary function, creates the files: user code and test cases, then bundles into a tar archive
+# Creates the files: user code and test cases
 async def create_usr_files(params):
     usr = open(params["uuid"], mode="w")
     usr.write(params["code"])
     usr.close()
-    os.chmod(params["uuid"], 0o777)
     if params["input"][len(params["input"]) -1] != "\n":
         params["input"] = params["input"] + "\n"
     test = open("input" + params["uuid"], mode="w")
     test.write(params["input"])
     test.close()
-    os.chmod("input" + params["uuid"], 0o777)
     return
 
 async def runtime_service(params):
-    cmd = []
     await create_usr_files(params)
+    cmd = []
     # create the container
     cmd.append("docker run -it -d --name=" + params["uuid"] + params["lang"] + " " + IMG_LIST[params["lang"]][0])
     # transfer code into container
     cmd.append("docker cp " + params["uuid"] + " " + params["uuid"] + params["lang"] + ":.")
     # transfer input into container
-    cmd.append("docker cp input" + params["uuid"] + " " + params["uuid"] + params["lang"] + ":.")
+    cmd.append(f"docker cp input{params['uuid']} {params['uuid']}{params['lang']}:.")
     # execute command
     cmd.append("docker exec " + params["uuid"] + params["lang"] + " /bin/sh -c '" + 
             IMG_LIST[params["lang"]][1] + params["uuid"] + IMG_LIST[params["lang"]][2] + params["uuid"] +
@@ -77,7 +77,7 @@ async def runtime_service(params):
             params["uuid"] + params["lang"] + ":./" + params["uuid"] + "err.out .")
     # stop and delete container
     cmd.append("docker stop " + params["uuid"] + params["lang"] + " && docker rm " + params["uuid"] + params["lang"])
-    for x in cmd: os.system(x + " > /dev/null 1>&2")
+    for x in cmd: os.system(f"{x} > /dev/null 1>&2")
     return await parse_res(params)
 
 # Driver code for the rts endpoint
