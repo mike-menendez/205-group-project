@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<body style="background-color: #e0e0e0;" class="animated slideInUp">
+    <div class="jumbotron text-center shadow mb-5">
+        <h1>Covid - 19 Site</h1>
+        <hr style="width: 35%;">
+        <h6>A resource for _________</h6>
+    </div>
+    <div class="container card p-5 text-center mt-5">
+        <div>{{ summary['Global'] }}</div>
+    </div>
+{% endblock %}
