@@ -25,12 +25,11 @@ async def startup_event():
     # Mount static directory as the root 
     app.mount("/static", StaticFiles(directory="static"))
 
-
 # Index entrypoint for website. 
 @app.get("/")
 async def index(request: Request):
     return templates.TemplateResponse("index.html",
-    {"request": request,"summary" : (await data_fetch("https://api.covid19api.com/summary"))})
+    {"request": request,"summary" : await data_fetch("https://api.covid19api.com/summary")})
 
 # Get data by country code
 @app.get("/country/{c_code}")
@@ -46,4 +45,9 @@ async def test(request: Request, c_code: str = None):
             active = active + x['Active']
     return templates.TemplateResponse("country.html",
         {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover}})
+
+# 404 error handling
+@app.get("/.*")
+async def err_render(request: Request):
+    return templates.TemplateResponse("404.html", {"request": request})
     
