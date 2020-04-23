@@ -6,7 +6,20 @@
         <hr style="width: 35%;">
         <h6>A resource for _________</h6>
     </div>
-    <div class="container card p-5 text-center mt-5">
-        <div>{{data}}</div>
+    <div class="container card p-5 mt-5">
+        <div>
+            <div>
+                <h3>Confirmed: <span class = "badge badge-info float-right">{{data['confirmed']}}</span></h3>
+                <hr>
+                <h3>Dead: <span class = "badge badge-danger float-right">{{data['dead']}}</span></h3>
+                <hr>
+                <h3>Active: <span class ="badge badge-warning float-right">{{data['active']}}</span></h3>
+                <hr>
+                <h3>Recovered: <span class = "badge badge-primary float-right">{{data['recovered']}}</span></h3>
+            </div>
+            <div class="clearfix text-center">
+                <button onclick="window.location.href='/'" class="btn btn-success">Go Home</button>
+            </div>
+        </div>
     </div>
 {% endblock %}
