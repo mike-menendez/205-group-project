@@ -29,7 +29,7 @@ async def startup_event():
 @app.get("/")
 async def index(request: Request):
     return templates.TemplateResponse("index.html",
-    {"request": request,"summary" : await data_fetch("https://api.covid19api.com/summary")})
+    {"request": request,"summary" : (await data_fetch("https://api.covid19api.com/summary"))['Global']})
 
 # Get data by country code
 @app.get("/country/{c_code}")
