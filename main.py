@@ -38,6 +38,7 @@ async def test(request: Request, c_code: str = None):
         return templates.TemplateResponse("404.html", {"request": request})
     dead, confirm, recover, active, country = 0, 0, 0, 0, SLUG_FARM[c_code.upper()]
     for x in list(await data_fetch(f"https://api.covid19api.com/live/country/{country}/status/confirmed")):
+
         if "2020-04-23" in x['Date']:
             dead = dead + x['Deaths']
             confirm = confirm + x['Confirmed']
@@ -45,6 +46,7 @@ async def test(request: Request, c_code: str = None):
             active = active + x['Active']
     return templates.TemplateResponse("country.html",
         {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover}, "country": country})
+
 
 # 404 error handling
 @app.get("/.*")
