@@ -10,6 +10,8 @@ SLUG_FARM = {}
 app = FastAPI()
 # Mount templates directory for Jinja rendering
 templates = Jinja2Templates(directory="templates")
+# Mount static directory as the root 
+# app.mount("/static", StaticFiles(directory="static"))
 
 # Fetches data from the remote api, as the api only supports GET, we're taking a shortcut
 async def data_fetch(loc: str):
@@ -22,8 +24,6 @@ async def data_fetch(loc: str):
 async def startup_event():
     for x in await data_fetch("https://api.covid19api.com/countries"):
         SLUG_FARM[x["ISO2"]] = x["Slug"]
-    # Mount static directory as the root 
-    app.mount("/static", StaticFiles(directory="static"))
 
 # Index entrypoint for website. 
 @app.get("/")
@@ -36,15 +36,17 @@ async def index(request: Request):
 async def test(request: Request, c_code: str = None):
     if not c_code or c_code.upper() not in SLUG_FARM.keys():
         return templates.TemplateResponse("404.html", {"request": request})
-    dead, confirm, recover, active = 0, 0, 0, 0
-    for x in list(await data_fetch(f"https://api.covid19api.com/live/country/{c_code}/status/confirmed")):
+    dead, confirm, recover, active, country = 0, 0, 0, 0, SLUG_FARM[c_code.upper()]
+    for x in list(await data_fetch(f"https://api.covid19api.com/live/country/{country}/status/confirmed")):
+
         if "2020-04-23" in x['Date']:
             dead = dead + x['Deaths']
             confirm = confirm + x['Confirmed']
             recover = recover + x['Recovered']
             active = active + x['Active']
     return templates.TemplateResponse("country.html",
-        {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover}})
+        {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover}, "country": country})
+
 
 # 404 error handling
 @app.get("/.*")
