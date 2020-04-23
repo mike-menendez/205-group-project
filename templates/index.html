@@ -4,10 +4,13 @@
     <div class="jumbotron text-center shadow mb-5">
         <h1>Covid - 19 Site</h1>
         <hr style="width: 35%;">
-        <h6>A resource for _________</h6>
+        <h6>A resource for <span class = "t_mod">The World!</span></h6>
     </div>
     <div class="container card p-5 mt-5">
-        <div>{{ summary['Global'] }}
+        <div class="md-form mb-3">
+            <input class="form-control" type="text" placeholder="Search For A Country" aria-label="Search For A Country">
+        </div>
+        <div>
             <h3>New Cases: <span class="badge badge-primary float-right">{{summary['NewConfirmed']}}</span></h3>
             <h3>Total Cases: <span class="badge badge-primary float-right">{{summary['TotalConfirmed']}}</span></h3>
             <h3>Recent Deaths: <span class="badge badge-primary float-right">{{summary['NewDeaths']}}</span></h3>
