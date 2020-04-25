@@ -20,3 +20,21 @@ COVID-19 data comes from http://covid19api.herokuapp.com/ which in turn pulls it
 ### Start the API for development
 
 `uvicorn main:app --reload`
+
+## Docker
+Docker for development
+
+### Installation
+`git clone https://github.com/mike-menendez/205-group-project`
+
+`cd 205-group-project`
+
+`docker build . -t covid`
+
+### Run
+`docker run -d -v ${PWD}:/usr/src/app --name covid --network="host" covid`
+
+Access it by going to http://127.0.0.1:8000
+
+### Stop
+`docker stop covid`
