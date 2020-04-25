@@ -10,13 +10,32 @@
         <div class="md-form mb-3">
             <input class="form-control" type="text" placeholder="Search For A Country" aria-label="Search For A Country">
         </div>
-        <div>
-            <h3>New Cases: <span class="badge badge-primary float-right">{{summary['NewConfirmed']}}</span></h3>
-            <h3>Total Cases: <span class="badge badge-primary float-right">{{summary['TotalConfirmed']}}</span></h3>
-            <h3>Recent Deaths: <span class="badge badge-primary float-right">{{summary['NewDeaths']}}</span></h3>
-            <h3>Total Deaths: <span class="badge badge-primary float-right">{{summary['TotalDeaths']}}</span></h3>
-            <h3>Recent Recoveries: <span class="badge badge-primary float-right">{{summary['NewRecovered']}}</span></h3>
-            <h3>Total Recoveries: <span class="badge badge-primary float-right">{{summary['TotalRecovered']}}</span></h3>
+        <div class="card-deck" style="">
+
+          <div class="card text-white bg-info mb-3" style="max-width: 20rem;">
+            <div class="card-header">Confirmed Cases</div>
+            <div class="card-body">
+              <h5 class="card-title">Recent <span class="badge badge-light float-right">{{summary['NewConfirmed']}}</span></h5>
+              <h5 class="card-title">Total <span class="badge badge-light float-right">{{summary['TotalConfirmed']}}</span></h5>
+            </div>
+          </div>
+
+          <div class="card text-white bg-success mb-3" style="max-width: 20rem;">
+            <div class="card-header">Recoveries</div>
+            <div class="card-body">
+              <h5 class="card-title">Recent <span class="badge badge-light float-right">{{summary['NewRecovered']}}</span></h5>
+              <h5 class="card-title">Total <span class="badge badge-light float-right">{{summary['TotalRecovered']}}</span></h5>
+            </div>
+          </div>
+
+          <div class="card text-white bg-danger mb-3" style="max-width: 20rem;">
+            <div class="card-header">Deaths</div>
+            <div class="card-body">
+              <h5 class="card-title">Recent <span class="badge badge-light float-right">{{summary['NewDeaths']}}</span></h5>
+              <h5 class="card-title">Total <span class="badge badge-light float-right">{{summary['TotalDeaths']}}</span></h5>
+            </div>
+          </div>
+
         </div>
     </div>
 {% endblock %}
