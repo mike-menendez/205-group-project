@@ -66,6 +66,11 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html",
     {"request": request,"summary" : (await data_fetch("https://api.covid19api.com/summary"))['Global']})
 
+@app.get("/admin")
+async def admin(request: Request):
+    print("Admin Route")
+    return templates.TemplateResponse("admin.html", {"request": request})
+
 # Get data by country code
 @app.get("/country/{c_code}")
 async def test(request: Request, c_code: str = None):
