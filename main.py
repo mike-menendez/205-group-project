@@ -88,10 +88,10 @@ async def test(request: Request, c_code: str = None):
     v1, v2, v3, v4, reg = hist_viz(data, c_code), viz_2(data, c_code), viz_3(data, c_code), viz_4(data, c_code), regression(data, c_code) 
 
     return templates.TemplateResponse("country.html",
-        {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover}, "country": country})
+        {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover}, "country": 
+        " ".join(map(lambda x: x.capitalize(), country.split("-")))})
 
 # 404 error handling
 @app.get("/.*")
 async def err_render(request: Request):
     return templates.TemplateResponse("404.html", {"request": request})
-    
