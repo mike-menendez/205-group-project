@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import os, logging, datetime, sys, aiohttp, numpy as np, seaborn as sn, sklearn as sk, pandas as pd
+import os, logging, datetime, sys, aiohttp, numpy as np, seaborn as sns, sklearn as sk, pandas as pd, matplotlib.pyplot as plt
 
 # Constant slugs for country code id
 SLUG_FARM = {}
@@ -11,7 +11,7 @@ app = FastAPI()
 # Mount templates directory for Jinja rendering
 templates = Jinja2Templates(directory="templates")
 # Mount static directory as the root 
-# app.mount("/static", StaticFiles(directory="static"))
+app.mount("/static", StaticFiles(directory="static"))
 
 # Aux Functions
 # Fetches data from the remote api, as the api only supports GET, we're taking a shortcut
@@ -26,11 +26,13 @@ async def data_fetch(loc: str):
 
 # takes in list of dictionaries, spits out a dataframe
 async def data_prep(data):
-    pass
+    return pd.DataFrame(data)
 
 # takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_hist.jpg"
 async def hist_viz(data, c_code):
-    pass
+    sns.distplot(data['Deaths'])
+    plt.savefig(f'static/img/{c_code}.png', dpi=300)
+    return f'/static/img/{c_code}.png'
 
 # takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_viz2.jpg"
 async def viz_2(data, c_code):
@@ -84,8 +86,8 @@ async def test(request: Request, c_code: str = None):
             confirm = confirm + x['Confirmed']
             recover = recover + x['Recovered']
             active = active + x['Active']
-    data = data_prep(data)
-    v1, v2, v3, v4, reg = hist_viz(data, c_code), viz_2(data, c_code), viz_3(data, c_code), viz_4(data, c_code), regression(data, c_code) 
+    data = await data_prep(data)
+    v1, v2, v3, v4, reg = await hist_viz(data, c_code), await viz_2(data, c_code), await viz_3(data, c_code), await viz_4(data, c_code), await regression(data, c_code) 
     return templates.TemplateResponse("country.html",
         {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover},
         "country": " ".join(map(lambda x: x.capitalize(), country.split("-"))), "v1": v1, "v2": v2, "v3": v3, "v4": v4, "reg": reg})
