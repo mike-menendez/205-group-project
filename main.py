@@ -79,17 +79,16 @@ async def test(request: Request, c_code: str = None):
     dead, confirm, recover, active, country = 0, 0, 0, 0, SLUG_FARM[c_code.upper()]
     data = list(await data_fetch(f"https://api.covid19api.com/live/country/{country}/status/confirmed"))
     for x in data:
-        if "2020-04-23" in x['Date']:
+        if str(datetime.date.today()) in x['Date']:
             dead = dead + x['Deaths']
             confirm = confirm + x['Confirmed']
             recover = recover + x['Recovered']
             active = active + x['Active']
     data = data_prep(data)
     v1, v2, v3, v4, reg = hist_viz(data, c_code), viz_2(data, c_code), viz_3(data, c_code), viz_4(data, c_code), regression(data, c_code) 
-
     return templates.TemplateResponse("country.html",
-        {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover}, "country": 
-        " ".join(map(lambda x: x.capitalize(), country.split("-")))})
+        {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover},
+        "country": " ".join(map(lambda x: x.capitalize(), country.split("-"))), "v1": v1, "v2": v2, "v3": v3, "v4": v4, "reg": reg})
 
 # 404 error handling
 @app.get("/.*")
