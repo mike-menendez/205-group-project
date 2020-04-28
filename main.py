@@ -51,8 +51,8 @@ async def test(request: Request, c_code: str = None):
             recover = recover + x['Recovered']
             active = active + x['Active']
     d = data_obj.Data(data)
-    v1, v2, v3 = await d.hist_viz(data, c_code), await d.viz_2(data, c_code), await d.viz_3(data, c_code),
-    v4, reg, arima = await d.viz_4(data, c_code), await d.regression(data, c_code), await d.arima(data, c_code) 
+    v1, v2, v3 = await d.hist_viz(d, c_code), await d.viz_2(d, c_code), await d.viz_3(d, c_code),
+    v4, reg, arima = await d.viz_4(d, c_code), await d.regression(d, c_code), await d.arima(d, c_code) 
     return templates.TemplateResponse("country.html",
         {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover},
         "country": " ".join(map(lambda x: x.capitalize(), country.split("-"))), "v1": v1, "v2": v2, "v3": v3, "v4": v4, "reg": reg, "ari": arima})

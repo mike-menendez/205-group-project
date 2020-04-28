@@ -11,34 +11,34 @@ class Data():
     
     # takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_hist.jpg"
     @staticmethod
-    async def hist_viz(data, c_code):
-        sns.distplot(data['Deaths'])
+    async def hist_viz(d, c_code):
+        sns.distplot(d.df['Deaths'])
         plt.savefig(f'static/img/{c_code}.png', dpi=300)
         return f'/static/img/{c_code}.png'
 
     # takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_viz2.jpg"
     @staticmethod
-    async def viz_2(data, c_code):
+    async def viz_2(d, c_code):
         pass
 
     # takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_viz3.jpg"
     @staticmethod
-    async def viz_3(data, c_code):
+    async def viz_3(d, c_code):
         pass
 
     # takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_viz4.jpg"
     @staticmethod
-    async def viz_4(data, c_code):
+    async def viz_4(d, c_code):
         pass
 
     # takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_reg.jpg"
     @staticmethod
-    async def regression(data, c_code):
+    async def regression(d, c_code):
         pass
 
     # Most likely won't be doing this one as it is extremely compute intensive, I've only gpu trained these
     # and they took forever even then although the datasets were much larger
     # takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_arma.jpg"
     @staticmethod
-    async def arima(data, c_code):
+    async def arima(d, c_code):
         pass
