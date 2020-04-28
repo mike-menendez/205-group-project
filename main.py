@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import os, logging, datetime, sys, aiohttp, numpy as np, seaborn as sns, sklearn as sk, pandas as pd, matplotlib.pyplot as plt
+import os, logging, datetime, sys, aiohttp, data_obj
 
 # Constant slugs for country code id
 SLUG_FARM = {}
@@ -19,42 +19,6 @@ async def data_fetch(loc: str):
     async with aiohttp.ClientSession() as session:
         async with session.get(loc) as resp:
             return await resp.json()
-
-# These are compute intensive tasks, would be good to either do this in the background
-# AOT, or we just run them once every 15 mins and the first access takes a hit with
-# subsequent accesses being fast for the next 15 mins with: time.ctime(os.path.getmtime("image.jpg"))
-
-# takes in list of dictionaries, spits out a dataframe
-async def data_prep(data):
-    return pd.DataFrame(data)
-
-# takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_hist.jpg"
-async def hist_viz(data, c_code):
-    sns.distplot(data['Deaths'])
-    plt.savefig(f'static/img/{c_code}.png', dpi=300)
-    return f'/static/img/{c_code}.png'
-
-# takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_viz2.jpg"
-async def viz_2(data, c_code):
-    pass
-
-# takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_viz3.jpg"
-async def viz_3(data, c_code):
-    pass
-
-# takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_viz4.jpg"
-async def viz_4(data, c_code):
-    pass
-
-# takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_reg.jpg"
-async def regression(data, c_code):
-    pass
-
-# Most likely won't be doing this one as it is extremely compute intensive, I've only gpu trained these
-# and they took forever even then although the datasets were much larger
-# takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_arma.jpg"
-async def arma(data, c_code):
-    pass
 
 # Initalize all the slugs needed for getting data from country
 @app.on_event("startup")
@@ -86,11 +50,12 @@ async def test(request: Request, c_code: str = None):
             confirm = confirm + x['Confirmed']
             recover = recover + x['Recovered']
             active = active + x['Active']
-    data = await data_prep(data)
-    v1, v2, v3, v4, reg = await hist_viz(data, c_code), await viz_2(data, c_code), await viz_3(data, c_code), await viz_4(data, c_code), await regression(data, c_code) 
+    d = data_obj.Data(data)
+    v1, v2, v3 = await d.hist_viz(data, c_code), await d.viz_2(data, c_code), await d.viz_3(data, c_code),
+    v4, reg, arima = await d.viz_4(data, c_code), await d.regression(data, c_code), await d.arima(data, c_code) 
     return templates.TemplateResponse("country.html",
         {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover},
-        "country": " ".join(map(lambda x: x.capitalize(), country.split("-"))), "v1": v1, "v2": v2, "v3": v3, "v4": v4, "reg": reg})
+        "country": " ".join(map(lambda x: x.capitalize(), country.split("-"))), "v1": v1, "v2": v2, "v3": v3, "v4": v4, "reg": reg, "ari": arima})
 
 # 404 error handling
 @app.get("/.*")
