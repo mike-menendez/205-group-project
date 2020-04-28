@@ -11,7 +11,7 @@ app = FastAPI()
 # Mount templates directory for Jinja rendering
 templates = Jinja2Templates(directory="templates")
 # Mount static directory as the root 
-app.mount("/static", StaticFiles(directory="static"))
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Aux Functions
 # Fetches data from the remote api, as the api only supports GET, we're taking a shortcut
