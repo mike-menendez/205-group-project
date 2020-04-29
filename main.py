@@ -63,11 +63,15 @@ async def test(request: Request, c_code: str = None):
             recover = recover + x['Recovered']
             active = active + x['Active']
     d = data_obj.Data(data)
+    if dead == 0: dead = "No Data Available For Today"
+    if confirm == 0: confirm = "No Data Available For Today"
+    if recover == 0: recover = "No Data Available For Today"
+    if active == 0: active = "No Data Available For Today"
     v1, v2, v3 = await d.hist_viz(d, c_code), await d.viz_2(d, c_code), await d.viz_3(d, c_code),
     v4, reg, arima = await d.viz_4(d, c_code), await d.regression(d, c_code), await d.arima(d, c_code) 
     return templates.TemplateResponse("country.html",
         {"request": request, "data" : {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover},
-        "country": " ".join(map(lambda x: x.capitalize(), country.split("-"))), "v1": v1, "v2": v2, "v3": v3, "v4": v4, "reg": reg, "ari": arima})
+        "country": " ".join(map(lambda x: x.capitalize(), country.split("-"))), "v1": v1, "v2": v2, "v3": v3, "v4": v4, "reg": reg, "ari": arima })
 
 # 404 error handling
 @app.get("/.*")
