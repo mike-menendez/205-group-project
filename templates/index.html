@@ -3,52 +3,61 @@
 
 <body style="background-color: #f5f5f5;">
 
-    <div class="jumbotron text-center">
-      <h2 class="card-title h2">COVID-19 Statistics</h2>
-      <h4 class="blue-text my-4 font-weight-bold">Summary of world cases, recoveries and deaths</h4>
-      <div class="row d-flex justify-content-center">
-        <div class="col-xl-7 pb-2">
-          <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga aliquid dolorem ea distinctio exercitationem delectus qui, quas eum architecto, amet quasi accusantium, fugit consequatur ducimus obcaecati numquam molestias hic itaque accusantium doloremque laudantium, totam rem aperiam.</p>
-        </div>
+  <div class="jumbotron text-center">
+    <h2 class="card-title h2">COVID-19 Statistics</h2>
+    <h4 class="blue-text my-4 font-weight-bold">Summary of world cases, recoveries and deaths</h4>
+    <div class="row d-flex justify-content-center">
+      <div class="col-xl-7 pb-2">
+        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga aliquid dolorem ea
+          distinctio exercitationem delectus qui, quas eum architecto, amet quasi accusantium, fugit consequatur ducimus
+          obcaecati numquam molestias hic itaque accusantium doloremque laudantium, totam rem aperiam.</p>
       </div>
     </div>
+  </div>
 
-    <div class="container card p-5 mt-5 animated slideInUp mb-5">
+  <div class="container card p-5 mt-5 animated slideInUp mb-5">
 
-      <h1>Search</h1>
+    <h1>Search</h1>
 
-        <div class="input-group md-form form-sm form-1 pl-0">
-          <input class="form-control my-0 py-1" type="text" placeholder="Search for a country" aria-label="Search for a country">
-          <button class="btn btn-elegant btn-rounded btn-sm my-0 waves-effect waves-light search" type="submit">Visit</button>
+    <div class="input-group md-form form-sm form-1 pl-0">
+      <input class="form-control my-0 py-1" type="text" placeholder="Search For A Country (Ex: United States)"
+        aria-label="Search For A Country (Ex: United States)">
+      <button class="btn btn-elegant btn-rounded btn-me my-0 waves-effect waves-light search"
+        type="submit">Visit</button>
 
-        </div>
-
-        <div class="card-deck row d-flex justify-content-center">
-
-          <div class="card text-white bg-success mb-3" style="max-width: 20rem;">
-            <div class="card-header">Recoveries</div>
-            <div class="card-body">
-              <h5 class="card-title">Recent <span class="badge badge-light float-right">{{summary['NewRecovered']}}</span></h5>
-              <h5 class="card-title">Total <span class="badge badge-light float-right">{{summary['TotalRecovered']}}</span></h5>
-            </div>
-          </div>
-          
-          <div class="card text-white bg-warning mb-3" style="max-width: 20rem;">
-            <div class="card-header">Confirmed</div>
-            <div class="card-body">
-              <h5 class="card-title">Recent <span class="badge badge-light float-right">{{summary['NewConfirmed']}}</span></h5>
-              <h5 class="card-title">Total <span class="badge badge-light float-right">{{summary['TotalConfirmed']}}</span></h5>
-            </div>
-          </div>
-
-          <div class="card text-white bg-danger mb-3" style="max-width: 20rem;">
-            <div class="card-header">Deaths</div>
-            <div class="card-body">
-              <h5 class="card-title">Recent <span class="badge badge-light float-right">{{summary['NewDeaths']}}</span></h5>
-              <h5 class="card-title">Total <span class="badge badge-light float-right">{{summary['TotalDeaths']}}</span></h5>
-            </div>
-          </div>
-
-        </div>
     </div>
-{% endblock %}
+
+    <div class="card-deck row d-flex justify-content-center">
+
+      <div class="card text-white bg-success mb-3 rcard" style="max-width: 20rem; cursor: pointer;">
+        <div class="card-header">Recoveries</div>
+        <div class="card-body">
+          <h5 class="card-title">Recent <span class="badge badge-light float-right">{{summary['NewRecovered']}}</span>
+          </h5>
+          <h5 class="card-title">Total <span class="badge badge-light float-right">{{summary['TotalRecovered']}}</span>
+          </h5>
+        </div>
+      </div>
+
+      <div class="card text-white bg-warning mb-3 ccard" style="max-width: 20rem; cursor: pointer;">
+        <div class="card-header">Confirmed</div>
+        <div class="card-body">
+          <h5 class="card-title">Recent <span class="badge badge-light float-right">{{summary['NewConfirmed']}}</span>
+          </h5>
+          <h5 class="card-title">Total <span class="badge badge-light float-right">{{summary['TotalConfirmed']}}</span>
+          </h5>
+        </div>
+      </div>
+
+      <div class="card text-white bg-danger mb-3 dcard" style="max-width: 20rem; cursor: pointer;">
+        <div class="card-header">Deaths</div>
+        <div class="card-body">
+          <h5 class="card-title">Recent <span class="badge badge-light float-right">{{summary['NewDeaths']}}</span></h5>
+          <h5 class="card-title">Total <span class="badge badge-light float-right">{{summary['TotalDeaths']}}</span>
+          </h5>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% endblock %}

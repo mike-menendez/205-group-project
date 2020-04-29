@@ -32,10 +32,22 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html",
     {"request": request,"summary" : (await data_fetch("https://api.covid19api.com/summary"))['Global']})
 
+# Admin page route
 @app.get("/admin")
 async def admin(request: Request):
     print("Admin Route")
     return templates.TemplateResponse("admin.html", {"request": request})
+
+# Get all worldwide data aggregated by country
+@app.get("/all/{req}")
+async def get_all(request: Request, req: str = None):
+    if req.lower() not in ["deaths", "recovered", "confirmed"]:
+        return templates.TemplateResponse("404.html", {"request": request})
+    data = (await data_fetch("https://api.covid19api.com/summary"))['Global']
+    if req.lower() == "deaths": ttl, recent = data['TotalDeaths'], data['NewDeaths']
+    elif req.lower() == "recovered": ttl, recent = data['TotalRecovered'], data['NewRecovered']
+    else: ttl, recent = data['TotalConfirmed'], data['NewConfirmed']
+    return templates.TemplateResponse("all.html", {"request": request, "title": req.capitalize(), "total": ttl, "new": recent})
 
 # Get data by country code
 @app.get("/country/{c_code}")

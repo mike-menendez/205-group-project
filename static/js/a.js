@@ -249,20 +249,21 @@ const countries = {
     "cyprus": "CY",
     "hong-kong-sar-china": "HK"
 }
-$(document).ready(()=>{
-    $("button").on("click", () =>{
+$(document).ready(() => {
+    $(".search").on("click", () => {
         country = $("input").val();
-        console.log("country: ", country)
-        console.log("mod val", country.trim().toLowerCase().replace(/ /g,"-"))
-        if(country.trim().toLowerCase().replace(/ /g,"-") in countries){
-            window.location.href="/country/" + countries[country.trim().toLowerCase().replace(/ /g,"-")]
-        }
-        else{
-            Swal.fire({
-                title: 'Invalid Country Requested',
-                icon: 'error',
-                text: 'Please Try again :)'
-            });
-        }
+        country.trim().toLowerCase().replace(/ /g, "-") in countries ?
+            window.location.href = "/country/" + countries[country.trim().toLowerCase().replace(/ /g, "-")].toLowerCase() :
+            Swal.fire({ title: 'Invalid Country Requested', icon: 'error', text: 'Please Try Again' });
+    });
+
+    $(".dcard").on("click", () => {
+        window.location.href = "/all/deaths";
+    });
+    $(".ccard").on("click", () => {
+        window.location.href = "/all/confirmed";
+    });
+    $(".rcard").on("click", () => {
+        window.location.href = "/all/recovered";
     });
 });
