@@ -54,19 +54,17 @@ async def get_all(request: Request, req: str = None):
 async def test(request: Request, c_code: str = None):
     if not c_code or c_code.upper() not in SLUG_FARM.keys():
         return templates.TemplateResponse("404.html", {"request": request})
-    dead, confirm, recover, active, country = 0, 0, 0, 0, SLUG_FARM[c_code.upper()]
-    data = list(await data_fetch(f"https://api.covid19api.com/live/country/{country}/status/confirmed"))
-    for x in data:
-        if str(datetime.date.today()) in x['Date']:
-            dead = dead + x['Deaths']
-            confirm = confirm + x['Confirmed']
-            recover = recover + x['Recovered']
-            active = active + x['Active']
-    d = data_obj.Data(data)
-    if dead == 0: dead = "No Data Available For Today"
-    if confirm == 0: confirm = "No Data Available For Today"
-    if recover == 0: recover = "No Data Available For Today"
-    if active == 0: active = "No Data Available For Today"
+    country, data = SLUG_FARM[c_code.upper()], None
+    temp = (await data_fetch("https://api.covid19api.com/summary"))['Countries']
+    # data = list(await data_fetch(f"https://api.covid19api.com/live/country/{country}/status/confirmed"))
+    for x in temp:
+        if x["Slug"] == country: 
+            data = x
+            break
+    if data is None: return templates.TemplateResponse("404.html", {"request": request})
+    print(f"data: {data}", file=sys.stderr)
+    dead, confirm, recover, active = x['TotalDeaths'], x['TotalConfirmed'], x['TotalRecovered'], (x['TotalConfirmed'] - x['TotalDeaths'] - x['TotalRecovered'])
+    d = data_obj.Data(temp)
     v1, v2, v3 = await d.hist_viz(d, c_code), await d.viz_2(d, c_code), await d.viz_3(d, c_code),
     v4, reg, arima = await d.viz_4(d, c_code), await d.regression(d, c_code), await d.arima(d, c_code) 
     return templates.TemplateResponse("country.html",

@@ -16,7 +16,7 @@ class Data():
     @staticmethod
     async def hist_viz(d, c_code):
         if not d.data: return ""
-        sns.distplot(d.df['Deaths'])
+        sns.distplot(d.df['NewDeaths'])
         plt.savefig(f'static/img/{c_code}.svg', dpi=300, format="svg")
         return f'/static/img/{c_code}.svg'
 
