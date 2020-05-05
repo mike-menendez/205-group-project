@@ -19,6 +19,8 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Fetches data from the remote api, as the api only supports GET, we're taking a shortcut
+
+
 async def data_fetch(loc: str):
     async with aiohttp.ClientSession() as session:
         async with session.get(loc) as resp:
