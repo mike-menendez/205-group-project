@@ -18,10 +18,7 @@ templates = Jinja2Templates(directory="templates")
 # Mount static directory as the root
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Aux Functions
 # Fetches data from the remote api, as the api only supports GET, we're taking a shortcut
-
-
 async def data_fetch(loc: str):
     async with aiohttp.ClientSession() as session:
         async with session.get(loc) as resp:
@@ -51,14 +48,21 @@ async def admin(request: Request):
 async def get_all(request: Request, req: str = None):
     if req.lower() not in ["deaths", "recovered", "confirmed"]:
         return templates.TemplateResponse("404.html", {"request": request})
-    data = (await data_fetch("https://api.covid19api.com/summary"))['Global']
+    data = (await data_fetch("https://api.covid19api.com/summary"))
+    glob, data = data['Global'], data['Countries']
+    countries = []
     if req.lower() == "deaths":
-        ttl, recent = data['TotalDeaths'], data['NewDeaths']
+        ttl, recent = 'TotalDeaths', 'NewDeaths'
     elif req.lower() == "recovered":
-        ttl, recent = data['TotalRecovered'], data['NewRecovered']
+        ttl, recent = 'TotalRecovered', 'NewRecovered'
     else:
-        ttl, recent = data['TotalConfirmed'], data['NewConfirmed']
-    return templates.TemplateResponse("all.html", {"request": request, "title": req.capitalize(), "total": ttl, "new": recent})
+        ttl, recent = 'TotalConfirmed', 'NewConfirmed'
+    for x in data:
+        print(f"x: {x}", file=sys.stderr )
+        countries.append((x['Country'], x[ttl]))
+    countries = list(filter(lambda x: x[1] != 0, countries))
+    countries.sort(key = lambda x: x[1], reverse=True)
+    return templates.TemplateResponse("all.html", {"request": request, "title": req.capitalize(), "countries": countries, "tot": glob[ttl]})
 
 # Get data by country code
 @app.get("/country/{c_code}")
