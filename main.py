@@ -82,12 +82,10 @@ async def test(request: Request, c_code: str = None):
     dead, confirm, recover, active = x['TotalDeaths'], x['TotalConfirmed'], x['TotalRecovered'], (
         x['TotalConfirmed'] - x['TotalDeaths'] - x['TotalRecovered'])
     d = data_obj.Data(temp)
-    v1, v2, v3 = await d.hist_viz(d, c_code), await d.viz_2(d, c_code), await d.viz_3(d, c_code),
-    v4, reg, arima = await d.viz_4(d, c_code), await d.regression(d, c_code), await d.arima(d, c_code)
+    v1 = await d.hist_viz(d, c_code)
     return templates.TemplateResponse("country.html",
                                       {"request": request, "data": {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover},
-                                       "country": " ".join(map(lambda x: x.capitalize(), country.split("-"))), "v1": v1, "v2": v2,
-                                       "v3": v3, "v4": v4, "reg": reg, "ari": arima})
+                                       "country": " ".join(map(lambda x: x.capitalize(), country.split("-"))), "v1": v1})
 
 # 404 error handling
 @app.get("/.*")
