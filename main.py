@@ -66,11 +66,6 @@ async def get_all(request: Request, req: str = None):
     countries.sort(key = lambda x: x[1], reverse=True)
     return templates.TemplateResponse("all.html", {"request": request, "title": req.capitalize(), "countries": countries, "tot": glob[ttl]})
 
-@app.get("/admin")
-async def admin(request: Request):
-    print("Admin Route")
-    return templates.TemplateResponse("admin.html", {"request": request})
-
 # Get data by country code
 @app.get("/country/{c_code}")
 async def test(request: Request, c_code: str = None):
@@ -89,6 +84,8 @@ async def test(request: Request, c_code: str = None):
     d = data_obj.Data(temp)
     v1 = await d.hist_viz(d, c_code)
     return templates.TemplateResponse("country.html",
+                                      {"request": request, "data": {"dead": dead, "confirmed": confirm, "active": active, "recovered": recover},
+                                       "country": " ".join(map(lambda x: x.capitalize(), country.split("-"))), "v1": v1})
 
 # 404 error handling
 @app.get("/.*")
