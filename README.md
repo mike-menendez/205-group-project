@@ -3,7 +3,7 @@ Group Project for CST 205
 
 ## Data
 
-COVID-19 data comes from [Omar Laraqui's](https://github.com/Omaroid) [COVID-19-API](http://covid19api.herokuapp.com) which in turn pulls it's data from the 2019 Novel Coronavirus (nCoV) Data Repository, provided by JHU CCSE. It is programmatically retrieved, re-formatted and stored in the server for every 10 minutes.
+COVID-19 data comes from [Kyle Redelinghuys'](https://twitter.com/ksredelinghuys) [COVID-19 API](https://covid19api.com/#) which in turn pulls its data from the [COVID-19 Data Repository](https://github.com/CSSEGISandData/COVID-19), provided by JHU CCSE. It is programmatically retrieved, re-formatted and stored in the server every 10 minutes.
 
 ## Prerequisites
 
