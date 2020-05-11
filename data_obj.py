@@ -32,8 +32,10 @@ class Data():
                 ]], columns=['Total Deaths', 'Total Confirmed', 'Total Recovered'])
                 df = np.log(df)
                 sns.set_style('darkgrid')
-                sns.barplot(data=df, order=[
-                            'Total Confirmed', 'Total Recovered', 'Total Deaths'])
+                sns.barplot(
+                    data=df,
+                    palette=['#ffbb33', '#00c851', '#ff4444'],
+                    order=['Total Confirmed', 'Total Recovered', 'Total Deaths'])
                 plt.ylabel("Log 10 Scaled Values")
                 plt.savefig(f'static/img/{c_code}.svg', format="svg")
                 return f'/static/img/{c_code}.svg'
