@@ -45,10 +45,10 @@ async def index(request: Request):
 async def preload(request: Request):
     return sd.search_data
 
-
+# Health check for SSL terminating proxy
 @app.get("/health", status_code=200)
 async def health_check(request: Request):
-    return
+    return ""
 
 # Admin page route
 @app.get("/admin")
@@ -71,7 +71,6 @@ async def get_all(request: Request, req: str = None):
     else:
         ttl = 'TotalConfirmed'
     for x in data:
-        print(f"x: {x}", file=sys.stderr)
         countries.append((x['Country'], x[ttl]))
     countries = list(filter(lambda x: x[1] != 0, countries))
     countries.sort(key=lambda x: x[1], reverse=True)
