@@ -7,6 +7,7 @@ import datetime
 import sys
 import aiohttp
 import data_obj
+import search_data as sd 
 
 # Constant slugs for country code id
 SLUG_FARM = {}
@@ -38,6 +39,12 @@ async def index(request: Request):
     return templates.TemplateResponse("index.html",
                                       {"request": request,
                                        "summary": (await data_fetch("https://api.covid19api.com/summary"))['Global']})
+
+# Data for search mapping
+@app.get("/preload")
+async def preload(request: Request):
+    return sd.search_data
+
 
 # Admin page route
 @app.get("/admin")
