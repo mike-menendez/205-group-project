@@ -13,15 +13,24 @@ class Data():
         else:
             self.data = None
 
-    # These are compute intensive tasks, would be good to either do this in the background
-    # AOT, or we just run them once every 15 mins and the first access takes a hit with
-    # subsequent accesses being fast for the next 15 mins with: time.ctime(os.path.getmtime("image.jpg"))
-
-    # takes in a dataframe, returns path to vizualization in the format of "static/{c_code}_hist.jpg"
+    # takes in a data obj, creates dataframe, returns path to vizualization in the format of "static/{c_code}_hist.jpg"
     @staticmethod
     async def hist_viz(d, c_code):
         if not d.data:
             return ""
-        sns.distplot(d.df['NewDeaths'])
-        plt.savefig(f'static/img/{c_code}.svg', dpi=300, format="svg")
-        return f'/static/img/{c_code}.svg'
+        for x in d.data:
+            # print("data: ", x, file=sys.stderr)
+            if x['CountryCode'].lower() == c_code:
+                df = pd.DataFrame([[
+                    int(x['TotalDeaths']),
+                    int(x['TotalConfirmed']),
+                    int(x['TotalRecovered'])
+                ]], columns=['Total Deaths', 'Total Confirmed', 'Total Recovered'])
+                df = np.log(df)
+                sns.set_style('darkgrid')
+                sns.barplot(data=df, order=[
+                            'Total Confirmed', 'Total Recovered', 'Total Deaths'])
+                plt.ylabel("Log 10 Scaled Values")
+                plt.savefig(f'static/img/{c_code}.svg', format="svg")
+                return f'/static/img/{c_code}.svg'
+        return ""
