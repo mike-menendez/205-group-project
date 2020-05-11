@@ -54,11 +54,11 @@ async def get_all(request: Request, req: str = None):
     glob, data = data['Global'], data['Countries']
     countries = []
     if req.lower() == "deaths":
-        ttl, recent = 'TotalDeaths', 'NewDeaths'
+        ttl = 'TotalDeaths'
     elif req.lower() == "recovered":
-        ttl, recent = 'TotalRecovered', 'NewRecovered'
+        ttl = 'TotalRecovered'
     else:
-        ttl, recent = 'TotalConfirmed', 'NewConfirmed'
+        ttl = 'TotalConfirmed'
     for x in data:
         print(f"x: {x}", file=sys.stderr )
         countries.append((x['Country'], x[ttl]))

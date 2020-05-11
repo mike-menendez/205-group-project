@@ -13,7 +13,7 @@ class Data():
         else:
             self.data = None
 
-    # takes in a data obj, creates dataframe, returns path to vizualization in the format of "static/{c_code}_hist.jpg"
+    # takes in a data obj, creates dataframe, returns path to vizualization
     @staticmethod
     async def hist_viz(d, c_code):
         if not d.data:
