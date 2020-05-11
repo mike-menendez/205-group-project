@@ -3,3 +3,45 @@
     font-weight: bolder;
     font-style: italic;
 }
+
+.flex-container {
+    display: grid;
+    justify-content: center;
+    grid-template-rows: auto;
+    border-color: lightBlue;
+    grid-template-areas:
+    "p1 p1 p1 p2 p2 p2"
+    "p3 p3 p3 p4 p4 p4"
+}
+
+.pic1 {
+    grid-area: p1;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.pic2 {
+    grid-area: p2;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.pic3 {
+    grid-area: p3;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.pic4 {
+    grid-area: p4;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}

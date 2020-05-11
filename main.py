@@ -40,10 +40,9 @@ async def index(request: Request):
                                        "summary": (await data_fetch("https://api.covid19api.com/summary"))['Global']})
 
 # Admin page route
-@app.get("/admin")
+@app.get("/info")
 async def admin(request: Request):
-    print("Admin Route")
-    return templates.TemplateResponse("admin.html", {"request": request})
+    return templates.TemplateResponse("info.html", {"request": request})
 
 # Get all worldwide data aggregated by country
 @app.get("/all/{req}")
