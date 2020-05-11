@@ -7,6 +7,7 @@ import datetime
 import sys
 import aiohttp
 import data_obj
+import search_data as sd
 
 # Constant slugs for country code id
 SLUG_FARM = {}
@@ -33,11 +34,21 @@ async def startup_event():
         SLUG_FARM[x["ISO2"]] = x["Slug"]
 
 # Index entrypoint for website.
-@app.get("/")
+@app.get("/", status_code=200)
 async def index(request: Request):
     return templates.TemplateResponse("index.html",
                                       {"request": request,
                                        "summary": (await data_fetch("https://api.covid19api.com/summary"))['Global']})
+
+# Data for search mapping
+@app.get("/preload")
+async def preload(request: Request):
+    return sd.search_data
+
+# Health check for SSL terminating proxy
+@app.get("/health", status_code=200)
+async def health_check(request: Request):
+    return ""
 
 # Admin page route
 @app.get("/info")
@@ -53,16 +64,15 @@ async def get_all(request: Request, req: str = None):
     glob, data = data['Global'], data['Countries']
     countries = []
     if req.lower() == "deaths":
-        ttl, recent = 'TotalDeaths', 'NewDeaths'
+        ttl = 'TotalDeaths'
     elif req.lower() == "recovered":
-        ttl, recent = 'TotalRecovered', 'NewRecovered'
+        ttl = 'TotalRecovered'
     else:
-        ttl, recent = 'TotalConfirmed', 'NewConfirmed'
+        ttl = 'TotalConfirmed'
     for x in data:
-        print(f"x: {x}", file=sys.stderr )
         countries.append((x['Country'], x[ttl]))
     countries = list(filter(lambda x: x[1] != 0, countries))
-    countries.sort(key = lambda x: x[1], reverse=True)
+    countries.sort(key=lambda x: x[1], reverse=True)
     return templates.TemplateResponse("all.html", {"request": request, "title": req.capitalize(), "countries": countries, "tot": glob[ttl]})
 
 # Get data by country code
