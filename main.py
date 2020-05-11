@@ -7,7 +7,7 @@ import datetime
 import sys
 import aiohttp
 import data_obj
-import search_data as sd 
+import search_data as sd
 
 # Constant slugs for country code id
 SLUG_FARM = {}
@@ -34,7 +34,7 @@ async def startup_event():
         SLUG_FARM[x["ISO2"]] = x["Slug"]
 
 # Index entrypoint for website.
-@app.get("/")
+@app.get("/", status_code=200)
 async def index(request: Request):
     return templates.TemplateResponse("index.html",
                                       {"request": request,
@@ -45,6 +45,10 @@ async def index(request: Request):
 async def preload(request: Request):
     return sd.search_data
 
+
+@app.get("/health", status_code=200)
+async def health_check(request: Request):
+    return
 
 # Admin page route
 @app.get("/admin")
@@ -67,10 +71,10 @@ async def get_all(request: Request, req: str = None):
     else:
         ttl = 'TotalConfirmed'
     for x in data:
-        print(f"x: {x}", file=sys.stderr )
+        print(f"x: {x}", file=sys.stderr)
         countries.append((x['Country'], x[ttl]))
     countries = list(filter(lambda x: x[1] != 0, countries))
-    countries.sort(key = lambda x: x[1], reverse=True)
+    countries.sort(key=lambda x: x[1], reverse=True)
     return templates.TemplateResponse("all.html", {"request": request, "title": req.capitalize(), "countries": countries, "tot": glob[ttl]})
 
 # Get data by country code
