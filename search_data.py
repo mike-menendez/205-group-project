@@ -1,3 +1,8 @@
+# Authors: Mike Menendez, Frank Piva, Felix Romero-Flores, Edgaras Slezas
+# Date: May 11, 2020
+# Course: CST 205
+# Description: This is the collection of data that drives the search bar and allows for quick search results
+
 search_data = {
     "madagascar": "MG",
     "niger": "NE",

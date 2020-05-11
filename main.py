@@ -1,3 +1,10 @@
+# Authors: Mike Menendez, Frank Piva, Felix Romero-Flores, Edgaras Slezas
+# Date: May 11, 2020
+# Course: CST 205
+# Description: This is the main driver web server. This backend serves all endpoints
+#              and renders the requested web pages on the fly via Jinja2 templates.
+#              this backend also fetches remote data from an external api
+
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates

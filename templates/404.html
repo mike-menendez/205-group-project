@@ -1,14 +1,18 @@
-{% extends "base.html" %}
-{% block content %}
+<!--
+    Authors: Mike Menendez, Frank Piva, Felix Romero-Flores, Edgaras Slezas
+    Date: May 11, 2020
+    Course: CST 205
+    Description: Generic template for rendering a custom 404 page -->
+{% extends "base.html" %} {% block content %}
 
 <body style="background-color: #f5f5f5;">
 
-  <div class="jumbotron text-center">
-    <h2 class="card-title h2">COVID-19 Statistics</h2>
-    <h4 class="red-text my-4 font-weight-bold">Invalid Resource Requested</h4>
-    <div class="clearfix text-center">
-      <button onclick="window.location.href='/'" class="btn btn-dark">Back to home</button>
+    <div class="jumbotron text-center">
+        <h2 class="card-title h2">COVID-19 Statistics</h2>
+        <h4 class="red-text my-4 font-weight-bold">Invalid Resource Requested</h4>
+        <div class="clearfix text-center">
+            <button onclick="window.location.href='/'" class="btn btn-dark">Back to home</button>
+        </div>
     </div>
-  </div>
 
-  {% endblock %}
+    {% endblock %}

@@ -1,3 +1,8 @@
+# Authors: Mike Menendez, Frank Piva, Felix Romero-Flores, Edgaras Slezas
+# Date: May 11, 2020
+# Course: CST 205
+# Description: This is a supporting class, Data. It holds the country stat data and generates
+#              a barplot of country specific stats that are log scaled for clarity.
 import numpy as np
 import seaborn as sns
 import pandas as pd

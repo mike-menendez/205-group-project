@@ -1,3 +1,7 @@
+// Authors: Mike Menendez, Frank Piva, Felix Romero-Flores, Edgaras Slezas
+// Date: May 11, 2020
+// Course: CST 205
+// Description: Jquery and Ajax to support the site with on click listeners and fetching the data for the search bar
 var countries = null
 $(document).ready(() => {
     $(".search").on("click", () => {
