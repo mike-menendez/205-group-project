@@ -1,10 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import os
-import logging
-import datetime
-import sys
 import aiohttp
 import data_obj
 import search_data as sd
@@ -20,8 +16,6 @@ templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Fetches data from the remote api, as the api only supports GET, we're taking a shortcut
-
-
 async def data_fetch(loc: str):
     async with aiohttp.ClientSession() as session:
         async with session.get(loc) as resp:
@@ -51,10 +45,9 @@ async def health_check(request: Request):
     return ""
 
 # Admin page route
-@app.get("/admin")
+@app.get("/info")
 async def admin(request: Request):
-    print("Admin Route")
-    return templates.TemplateResponse("admin.html", {"request": request})
+    return templates.TemplateResponse("info.html", {"request": request})
 
 # Get all worldwide data aggregated by country
 @app.get("/all/{req}")
